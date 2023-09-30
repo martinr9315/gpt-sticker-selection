@@ -89,7 +89,7 @@ def main():
                       "a boy and girl sitting in a train",
                       "a boy standing next to a train"]]
 
-    print(caption_stickering(stickers, wedding_photo_captions, report_cost=True))
+    print(caption_stickering(stickers, misc_captions, report_cost=True))
 
 
 if __name__ == "__main__":
