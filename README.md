@@ -1,7 +1,7 @@
 
 # Text Sticker Selection Project
 
-This project aims to provide a tool for designers to select appropriate text stickers based on a set of image captions. By interacting with the OpenAI GPT-3 API, it generates a theme and selects stickers that align with the generated theme. The primary function utilized for this task is `caption_stickering`.
+This project aims to select appropriate text stickers based on a set of image captions for automated photobook design. By interacting with the OpenAI GPT-3 API, it generates a theme and selects stickers that align with the generated theme. The primary function utilized for this task is `caption_stickering`.
 
 ## Getting Started
 
