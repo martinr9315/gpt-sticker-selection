@@ -3,9 +3,10 @@ import csv
 import tiktoken
 import os
 
+# TODO: change 'sticker' to 'text phrase'
 
 # Initialize API client
-openai.api_key = os.environ["OPENAI_API_KEY"]
+openai.api_key = os.environ['OPENAI_API_KEY']
 
 
 def num_tokens_from_messages(messages, model="gpt-3.5-turbo-16k"):
@@ -41,27 +42,33 @@ def num_tokens_from_messages(messages, model="gpt-3.5-turbo-16k"):
     return num_tokens
 
 
-def parse_stickers(file):
+def parse_stickers(f):
     # Read stickers from a CSV file
     stickers = []
-    with open("sticker_slugs.csv", mode='r') as file:
+    with open(f, mode='r') as file:
         csv_file = csv.reader(file)
+        next(csv_file, None)
         for line in csv_file:
             stickers.append(line[0])
     return stickers
 
 
-def caption_stickering(stickers, captions, model="gpt-3.5-turbo-16k", report_cost=False):
-    prompt = "You are a designer who must select 3 text stickers to add them to a page of a scrapbook that contains images described by the captions below. In one full sentence, identify the theme of this page. Use that explanation to return a JSON of the 3 most appropriate text stickers from the sticker list below, with the keys as '1', '2', '3'."
-    prompt += "The format of your response should be: Theme: sentence \n JSON: json_text"
+
+def caption_stickering(stickers, spread_captions, model="gpt-3.5-turbo-16k", report_cost=False):
+    prompt = "Task: You are a designer who must select 3 text stickers to add them to a page of a scrapbook given a set of captions describing the images in the spread. In one full sentence, identify the theme of this page. Use that explanation to return a JSON of the 3 most appropriate text stickers from the sticker list below, with the keys as '1', '2', '3'."
+    prompt += "The format of each response should be:\nTheme: sentence\nJSON: json_text"
 
     conversation = [{"role": "system", "content": f"{prompt}"}]
 
-    # Include image captions
-    conversation.append({"role": "user", "content": f"\nImage captions: {captions}"})
-
     # Load text stickers
     conversation.append({"role": "user", "content": f'\nSticker list: {stickers[:1000]}'})
+
+    # Format captions
+    result = [', '.join(spread) for spread in spread_captions]
+    captions = '\n\n'.join(result)
+
+    # Include image captions
+    conversation.append({"role": "user", "content": f"You are given the following {len(spread_captions)} sets of captions. Return one response for each set:\n {captions}."})
 
     # Make the API call
     response = openai.ChatCompletion.create(
@@ -74,8 +81,6 @@ def caption_stickering(stickers, captions, model="gpt-3.5-turbo-16k", report_cos
     if report_cost:
         # tokens = num_tokens_from_messages(conversation, model)
         # print(f"{tokens} prompt tokens counted.")
-        # print(f'{response["usage"]["prompt_tokens"]} prompt tokens used.')
-        # print(f'{response["usage"]["completion_tokens"]} completion tokens used.')
         print(f'{response["usage"]["total_tokens"]} total tokens used.')
         print(f"cost: {(response['usage']['total_tokens']/1000)*.003}")
 
@@ -84,13 +89,9 @@ def caption_stickering(stickers, captions, model="gpt-3.5-turbo-16k", report_cos
 
 
 def main():
-    stickers = parse_stickers("sticker_slugs.csv")
+    stickers = parse_stickers("representative_slugs.csv")
 
-    captions = [["A boy and girl sitting in a train",
-                 "A red machine with a sign",
-                 "A couple of kids sitting next to luggage",
-                 "A boy standing next to a train"],
-                ["a woman is holding a baby on a bed",
+    captions = [["a woman is holding a baby on a bed",
                  "a woman holding a baby in her arms",
                  "a basket filled with baby blankets",
                  "a toy airplane sitting on top of a table",
@@ -99,11 +100,15 @@ def main():
                  "a woman walking down a rainbow painted street",
                  "two people standing on a rainbow painted street",
                  "a woman standing in front of a bar",
-                 "a red building with a green and red sign"]]
+                 "a red building with a green and red sign"],
+                ["a couple of kids sitting next to luggage",
+                 "a red machine with a sign",
+                 "a boy and girl sitting in a train",
+                 "a boy standing next to a train"]]
 
-    for spread in captions:
-        print(caption_stickering(stickers, spread, report_cost=True))
+    print(caption_stickering(stickers, captions, report_cost=True))
 
 
 if __name__ == "__main__":
     main()
+
