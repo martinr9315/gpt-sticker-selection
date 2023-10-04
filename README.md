@@ -92,4 +92,4 @@ A potential solution to reducing token count & thereby time and cost is to reduc
 
 This process results in 499 encoding groups with the following distribution.
 
-<img src="encoding_histogram.png" alt="Description of the image" width="600" height="300">
+<img src="encoding_histogram.png" alt="Description of the image" width="600" height="350">
