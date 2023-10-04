@@ -57,10 +57,10 @@ print(response)
 The list contains `3,770` tokens.
 
 #### **Formatting ChatGPT Outputs: Challenges & Solutions**
-- **Phrase Selection**: Despite emphasizing the use of only the provided list, the model sometimes creates its own phrases.
-- **Output Format**: Requesting outputs as structured data (like JSON) led to more consistent results than formatted text.
-- **Standardizing Answers**: Defining word limits and logical progression (like theme identification) improved output accuracy.
-- **Number of Responses**: Specifying the required number of responses or explicitly defining the count in prompts was essential to get multiple sets of captions.
+- **Phrase Selection**: To ensure that ChatGPT chooses phrases strictly from the provided list, it was imperative to emphasize picking only from the given list. Despite these efforts, the model occasionally invents its own phrases. This behavior underscores that the model is inherently designed for generation rather than making decisions from large datasets.
+- **Output Format**: Achieving a consistent output format was challenging. A breakthrough was realized when we specifically requested outputs in the form of structured data, such as JSON. The general guideline inferred was that asking for standardized formats (like JSON, CSV) yields better consistency than merely formatted text.
+- **Standardizing Answers**:  Setting a specific number of words for the output assisted in standardizing answers. Additionally, specifying intermediate logical steps, like identifying a theme before selecting phrases, added coherence to the model's outputs. This added step strikes a balance between increased token count and enhanced accuracy from the model's self-explanation.
+- **Number of Responses**: An ongoing challenge was ensuring the model recognized the need to produce multiple sets of captions (spreads). Solutions included explicitly asking the model to recognize the number of spreads or directly specifying the count in the prompt. Despite these efforts, the model sometimes returned only one response, indicating the need for additional checks.
 
 #### **Model Selection Rationale**
 - **Token Capacity**: The `gpt-3.5-turbo-16k` model was chosen due to nearing the 4k token limit with just the phrases.
@@ -71,7 +71,7 @@ The list contains `3,770` tokens.
 - Ensure outputs are non-repetitive, especially for similar themes.
 
 
-Alternate models that could be used -- other than OpenAI models?
+TODO: alternate models that could be used -- other than OpenAI models?
 
 
 ## Limitations
@@ -82,7 +82,7 @@ Using the default model `gpt-3.5-turbo-16k` the token limit is 16k, and the cost
 
 However, the runtime is approximately 1.5 per spread with potentially significant variation based on the number of images in a spread.
 
-### Potential Text Phrase Encoding
+#### Potential Text Phrase Encoding
 A potential solution to reducing token count & thereby time and cost is to reduce the sticker slug list to a list of representative stickers for stickers with identical keyword descriptions. The process outlined below was used to generate `representative_slugs.csv` and `encoding_groups.json`
 
 1. **One-Hot Encoding**: Keywords were one-hot encoded to create binary vectors representing the presence or absence of each keyword.
