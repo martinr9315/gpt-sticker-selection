@@ -91,4 +91,5 @@ A potential solution to reducing token count & thereby time and cost is to reduc
 4. **Output Generation**: A JSON object and a CSV file were created to present the representatives and their respective encoding groups.
 
 This process results in 499 encoding groups with the following distribution.
-<img src="encoding_histogram.png" alt="Description of the image" width="200" height="300">
+
+<img src="encoding_histogram.png" alt="Description of the image" width="600" height="300">
