@@ -47,6 +47,33 @@ response = caption_stickering(stickers, spread_captions, report_cost=True)
 print(response)
 ```
 
+## Development
+
+#### **Token Count Computation**
+- **Initially**: Utilized `tiktoken` from OpenAI, but it provided counts before API calls.
+- **Now**: Tokens are computed post-response using `response["usage"]["total_tokens"]`. The cost is determined by multiplying with the rate for `gpt-3.5-turbo-16k` which is `$0.003/1K`.
+
+#### **Tokens in the Automated Phrase List**
+The list contains `3,770` tokens.
+
+#### **Formatting ChatGPT Outputs: Challenges & Solutions**
+- **Phrase Selection**: Despite emphasizing the use of only the provided list, the model sometimes creates its own phrases.
+- **Output Format**: Requesting outputs as structured data (like JSON) led to more consistent results than formatted text.
+- **Standardizing Answers**: Defining word limits and logical progression (like theme identification) improved output accuracy.
+- **Number of Responses**: Specifying the required number of responses or explicitly defining the count in prompts was essential to get multiple sets of captions.
+
+#### **Model Selection Rationale**
+- **Token Capacity**: The `gpt-3.5-turbo-16k` model was chosen due to nearing the 4k token limit with just the phrases.
+- **Cost Efficiency**: The `gpt-4` 8k model's cost was 10 times that of `gpt-3.5-turbo-16k`.
+
+#### **Checks for Production Deployment**
+- Verify the number and validity of outputted phrases.
+- Ensure outputs are non-repetitive, especially for similar themes.
+
+
+Alternate models that could be used -- other than OpenAI models?
+
+
 ## Limitations
 
 The primary limitations are token limit and runtime. 
@@ -55,7 +82,6 @@ Using the default model `gpt-3.5-turbo-16k` the token limit is 16k, and the cost
 
 However, the runtime is approximately 1.5 per spread with potentially significant variation based on the number of images in a spread.
 
-
 ### Potential Text Phrase Encoding
 A potential solution to reducing token count & thereby time and cost is to reduce the sticker slug list to a list of representative stickers for stickers with identical keyword descriptions. The process outlined below was used to generate `representative_slugs.csv` and `encoding_groups.json`
 
@@ -63,3 +89,6 @@ A potential solution to reducing token count & thereby time and cost is to reduc
 2. **Encoding Groups Identification**: Unique binary vectors were identified as unique encoding groups, with each group assigned a unique identifier.
 3. **Centroid-based Representative Selection**: The centroid of each encoding group was computed, and the data point closest to the centroid was selected as the representative.
 4. **Output Generation**: A JSON object and a CSV file were created to present the representatives and their respective encoding groups.
+
+This process results in 499 encoding groups with the following distribution.
+![Histogram of encoding groupings](encoding_histogram.png)
