@@ -67,7 +67,7 @@ The list contains `3,770` tokens.
 - **Cost Efficiency**: The `gpt-4` 8k model's cost was 10 times that of `gpt-3.5-turbo-16k`.
 
 #### **Checks for Production Deployment**
-- Verify the number and validity of outputted phrases.
+- Verify the number and validity of outputted phrases, specifically verify they are actually in original list.
 - Ensure outputs are non-repetitive, especially for similar themes.
 
 
@@ -91,4 +91,4 @@ A potential solution to reducing token count & thereby time and cost is to reduc
 4. **Output Generation**: A JSON object and a CSV file were created to present the representatives and their respective encoding groups.
 
 This process results in 499 encoding groups with the following distribution.
-![Histogram of encoding groupings](encoding_histogram.png)
+<img src="encoding_histogram.png" alt="Description of the image" width="200" height="300">
