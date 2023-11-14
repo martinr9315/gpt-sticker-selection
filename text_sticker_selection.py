@@ -2,8 +2,6 @@ import openai
 import csv
 import os
 
-# TODO: change 'sticker' to 'text phrase'
-
 # Initialize API client
 openai.api_key = os.environ['OPENAI_API_KEY']
 
@@ -62,7 +60,7 @@ def caption_stickering(stickers, spread_captions, model="gpt-3.5-turbo-16k", rep
       temperature=0.2
     )
 
-    # Calculate number of tokens & cost
+    # Calculate number of tokens & cost - this assumes gpt-3.5-turbo-16k
     if report_cost:
         print(f'{response["usage"]["total_tokens"]} total tokens used.')
         print(f"cost: {(response['usage']['total_tokens']/1000)*.003}")
